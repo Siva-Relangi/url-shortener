@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import URL from "../Models/url.js";
+import URL from "../models/url.js";
 
 async function handleGetRequest(req, res) {
   const url = await URL.find({});

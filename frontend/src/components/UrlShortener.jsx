@@ -11,7 +11,7 @@ const URLShortener = () => {
   const [activeTab, setActiveTab] = useState('create');
   const [notification, setNotification] = useState('');
 
-  const API_BASE = 'http://localhost:3000';
+  const API_BASE = 'srv-d2f197gdl3ps73e302eg';
 
   useEffect(() => {
     if (activeTab === 'manage') {

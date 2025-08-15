@@ -11,7 +11,7 @@ const URLShortener = () => {
   const [activeTab, setActiveTab] = useState('create');
   const [notification, setNotification] = useState('');
 
-  const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     if (activeTab === 'manage') {

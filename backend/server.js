@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Vite default port number
+  origin: 'https://url-shortener-frontend-puce-gamma.vercel.app', // Vite default port number
   credentials: true
 }));
 

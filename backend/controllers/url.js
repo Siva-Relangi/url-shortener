@@ -2,12 +2,11 @@ import { nanoid } from "nanoid";
 import URL from "../models/url.js";
 
 async function handleGetRequest(req, res) {
-  const url = await URL.find({});
-  if (!url) return res.status(404).json({ error: "No URLs found" });
-  return res.json(url);
+  const entries = await URL.find({});
+  if (!entries.length) return res.status(404).json({ error: "No URLs found" });
+  return res.json(entries);
 }
 
-// In Controllers/url.js
 async function handleGenerateShortUrl(req, res) {
   const body = req.body;
   if (!body.url) return res.status(400).json({ error: "URL is required" });
@@ -37,4 +36,11 @@ async function handleAnalyticsRequest(req, res) {
   return res.json({ Analytics: url.visitHistory.length });
 }
 
-export { handleAnalyticsRequest, handleGenerateShortUrl, handleGetRequest };
+async function handleDeleteRequest(req, res) {
+  const shortId = req.params.shortId;
+  const url = await URL.findOneAndDelete({ shortId });
+  if (!url) return res.status(404).json({ error: "URL not found" });
+  return res.json({ message: "URL deleted successfully" });
+}
+
+export { handleAnalyticsRequest, handleGenerateShortUrl, handleGetRequest, handleDeleteRequest };

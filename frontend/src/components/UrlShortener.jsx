@@ -1,3 +1,4 @@
+// UrlShortener.jsx (added protocol handling in shortenUrl, delete functionality, and UI prefix for custom ID)
 import React, { useState, useEffect } from 'react';
 import { Link, BarChart3, Copy, ExternalLink, Trash2, RefreshCw } from 'lucide-react';
 
@@ -39,7 +40,12 @@ const URLShortener = () => {
       return;
     }
 
-    if (!validateUrl(originalUrl)) {
+    let processedUrl = originalUrl;
+    if (!processedUrl.startsWith('http://') && !processedUrl.startsWith('https://')) {
+      processedUrl = 'https://' + processedUrl;
+    }
+
+    if (!validateUrl(processedUrl)) {
       showNotification('Please enter a valid URL');
       return;
     }
@@ -52,7 +58,7 @@ const URLShortener = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          url: originalUrl,
+          url: processedUrl,
           customId: customShortId || undefined
         }),
       });
@@ -101,6 +107,25 @@ const URLShortener = () => {
       }
     } catch (error) {
       console.error(`Failed to fetch analytics for ${shortId}`);
+    }
+  };
+
+  const deleteUrl = async (shortId) => {
+    if (!window.confirm('Are you sure you want to delete this URL?')) return;
+
+    try {
+      const response = await fetch(`${API_BASE}/url/${shortId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        showNotification('URL deleted successfully');
+        fetchAllUrls(); // Refresh the list
+      } else {
+        showNotification('Failed to delete URL');
+      }
+    } catch (error) {
+      showNotification('Network error. Please try again.');
     }
   };
 
@@ -186,12 +211,15 @@ const URLShortener = () => {
                     Custom Short ID (Optional)
                   </label>
                   <div className="flex items-center">
+                    <span className="bg-gray-100 px-4 py-3 border border-gray-300 border-r-0 rounded-l-lg text-gray-500">
+                      short/
+                    </span>
                     <input
                       type="text"
                       value={customShortId}
                       onChange={(e) => setCustomShortId(e.target.value)}
                       placeholder="my-custom-id"
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                      className="flex-1 px-4 py-3 border border-gray-300 border-l-0 rounded-r-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <p className="text-sm text-gray-500 mt-1">
@@ -329,6 +357,12 @@ const URLShortener = () => {
                             >
                               <ExternalLink className="w-4 h-4" />
                             </a>
+                            <button
+                              onClick={() => deleteUrl(url.shortId)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
                           </div>
                         </td>
                       </tr>

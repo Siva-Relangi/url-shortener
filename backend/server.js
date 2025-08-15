@@ -43,6 +43,9 @@ app.get("/:shortId", async (req, res) => {
       },
     }
   );
+  if (!url) {
+    return res.status(404).send("URL not found");
+  }
   res.redirect(url.redirectUrl);
 });
 

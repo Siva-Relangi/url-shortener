@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: 'https://url-shortener-frontend-tg3v.onrender.com', // Vite default port
+  origin: 'http://localhost:5173', // Vite default port
   credentials: true
 }));
 

@@ -45,6 +45,11 @@ const URLShortener = () => {
       processedUrl = 'https://' + processedUrl;
     }
 
+    if(!processedUrl.endsWith('.com') && !processedUrl.endsWith('.org') && !processedUrl.endsWith('.net') && !processedUrl.includes('.')) {
+      showNotification('Please enter a valid URL');
+      return;
+    }
+
     if (!validateUrl(processedUrl)) {
       showNotification('Please enter a valid URL');
       return;
